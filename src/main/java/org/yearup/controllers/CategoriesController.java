@@ -61,42 +61,76 @@ public class CategoriesController {
         return categoryDao.getAllCategories();
     }
 
-    // add the appropriate annotation for a get action
-    public Category getById(@PathVariable int id)
-    {
+    //Added mapping to ensure user finds it through localhost../id
+    @GetMapping("/{id}")
+    public ResponseEntity<Category> getById(@PathVariable int id) {
+        Category category = categoryDao.getById(id);
+        if (category == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
         // get the category by id
-        return null;
+        return ResponseEntity.ok(category);
     }
 
-    // the url to return all products in category 1 would look like this
+    // the url to return all products in category 1 would look like this ✔
     // https://localhost:8080/categories/1/products
-    @GetMapping("{categoryId}/products")
-    public List<Product> getProductsById(@PathVariable int categoryId)
+    @GetMapping("/{categoryId}/products")
+    public ResponseEntity<List<Product>> getProductsByCategoryId(@PathVariable int categoryId)
     {
         // get a list of product by categoryId
-        return null;
+        List<Product> products = productDao.listByCategoryId(categoryId);
+        if (products.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); //404 if no products
+        }
+        return ResponseEntity.ok(products); //200 OK and list
     }
 
     // add annotation to call this method for a POST action
-    // add annotation to ensure that only an ADMIN can call this function
-    public Category addCategory(@RequestBody Category category)
+    // add annotation to ensure that only an ADMIN can call this function ✔
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')") //Only an admin can create categories
+    public ResponseEntity<Category> addCategory(@RequestBody Category category)
     {
         // insert the category
-        return null;
+        Category savedCategory = categoryDao.create(category);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedCategory); //Returns 201 if created :D
     }
 
-    // add annotation to call this method for a PUT (update) action - the url path must include the categoryId
-    // add annotation to ensure that only an ADMIN can call this function
-    public void updateCategory(@PathVariable int id, @RequestBody Category category)
-    {
+    // add annotation to call this method for a PUT (update) action - the url path must include the categoryId ✔
+    // add annotation to ensure that only an ADMIN can call this function ✔
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')") //Only an admin can update a category
+    public ResponseEntity<Category> updateCategory(@PathVariable int id, @RequestBody Category category) {
+        //Authorizing if category already exists:
+        Category existingCategory = categoryDao.getById(id);
+        if (existingCategory == null) {
+            //if it doesn't exist, return 404
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
         // update the category by id
-    }
+        category.setCategoryId(id); //Make sure the category ID stays the same
+        Category updatedCategory = categoryDao.update(id, category);
 
+        //Return updated category with status 200 (OK)
+        return ResponseEntity.ok(updatedCategory);
+    }
 
     // add annotation to call this method for a DELETE action - the url path must include the categoryId
     // add annotation to ensure that only an ADMIN can call this function
-    public void deleteCategory(@PathVariable int id)
-    {
-        // delete the category by id
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')") //Only admin can DELETE
+    public ResponseEntity<Void> deleteCategory(@PathVariable int id) {
+       //Verify category exisits:
+        Category existingCategory = categoryDao.getById(id);
+
+        if (existingCategory == null) {
+            //if it does not exist, error:
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        //delete category by ID
+        categoryDao.delete(id);
+
+        //Return 204 No Content status to show category was deleted successfully
+        return ResponseEntity.noContent().build();
     }
 }

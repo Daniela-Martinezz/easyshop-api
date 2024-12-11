@@ -11,10 +11,7 @@ import java.util.List;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 @Component
 public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
@@ -63,9 +60,10 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
     }
 
     @Override
-    public void update(int categoryId, Category category)
+    public Category update(int categoryId, Category category)
     {
         // update category
+        return category;
     }
 
     @Override
