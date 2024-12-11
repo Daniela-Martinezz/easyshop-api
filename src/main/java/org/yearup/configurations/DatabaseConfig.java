@@ -11,6 +11,11 @@ public class DatabaseConfig {
 
     private BasicDataSource basicDataSource;
 
+    @Bean
+    public BasicDataSource dataSource() {
+        return basicDataSource;
+    }
+
     @Autowired
     public DatabaseConfig(@Value("${spring.datasource.url}") String url,
                           @Value("${spring.datasource.username}") String username,
@@ -19,9 +24,5 @@ public class DatabaseConfig {
         basicDataSource.setUrl(url);
         basicDataSource.setUsername(username);
         basicDataSource.setPassword(password);
-    }
-    @Bean
-    public BasicDataSource dataSource() {
-        return basicDataSource;
     }
 }

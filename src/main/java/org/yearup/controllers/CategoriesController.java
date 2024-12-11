@@ -10,23 +10,55 @@ import org.yearup.models.Product;
 
 import java.util.List;
 
-// add the annotations to make this a REST controller
-// add the annotation to make this controller the endpoint for the following url
-    // http://localhost:8080/categories
-// add annotation to allow cross site origin requests
-public class CategoriesController
-{
-    private CategoryDao categoryDao;
-    private ProductDao productDao;
+import javax.validation.Valid;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
-    // create an Autowired controller to inject the categoryDao and ProductDao
+import org.yearup.models.Profile;
+import org.yearup.data.ProfileDao;
+import org.yearup.data.UserDao;
+import org.yearup.models.authentication.LoginDto;
+import org.yearup.models.authentication.LoginResponseDto;
+import org.yearup.models.authentication.RegisterUserDto;
+import org.yearup.models.User;
+import org.yearup.security.jwt.JWTFilter;
+import org.yearup.security.jwt.TokenProvider;
 
-    // add the appropriate annotation for a get action
-    public List<Category> getAll()
-    {
-        // find and return all categories
-        return null;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+
+@RestController
+@CrossOrigin
+@PreAuthorize("permitAll()")
+@RequestMapping("/categories")
+
+public class CategoriesController {
+
+    private final CategoryDao categoryDao;
+    private final ProductDao productDao;
+
+    // Constructor-based Dependency Injection
+    @Autowired
+    public CategoriesController(CategoryDao categoryDao, ProductDao productDao) {
+        this.categoryDao = categoryDao;
+        this.productDao = productDao;
+    }
+
+    // GET method to retrieve all categories
+    @GetMapping
+    public List<Category> getAll() {
+        // Retrieve and return all categories
+        return categoryDao.getAllCategories();
     }
 
     // add the appropriate annotation for a get action

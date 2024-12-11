@@ -30,7 +30,7 @@ public class ProductsController
                                 @RequestParam(name="minPrice", required = false) BigDecimal minPrice,
                                 @RequestParam(name="maxPrice", required = false) BigDecimal maxPrice,
                                 @RequestParam(name="color", required = false) String color
-                                )
+    )
     {
         try
         {
@@ -75,13 +75,13 @@ public class ProductsController
         }
     }
 
-    @PutMapping("{id}") //TODO
+    @PutMapping("{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void updateProduct(@PathVariable int id, @RequestBody Product product)
     {
         try
         {
-            productDao.update(id, product);
+            productDao.create(product);
         }
         catch(Exception ex)
         {
