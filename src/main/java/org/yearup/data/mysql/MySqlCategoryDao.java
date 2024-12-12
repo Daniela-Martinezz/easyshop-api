@@ -3,12 +3,11 @@ package org.yearup.data.mysql;
 import org.springframework.stereotype.Component;
 import org.yearup.data.CategoryDao;
 import org.yearup.models.Category;
-
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.List;
-
 import java.util.ArrayList;
+
 
 @Component
 public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
@@ -19,7 +18,7 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
 
     @Override
     public List<Category> getAllCategories() {
-        String sql = "SELECT * FROM categories"; // Adjust table name as per your database schema
+        String sql = "SELECT * FROM categories";
         List<Category> categories = new ArrayList<>();
 
         try (Connection connection = dataSource.getConnection();
@@ -27,12 +26,7 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
              ResultSet resultSet = statement.executeQuery()) {
 
             while (resultSet.next()) {
-                Category category = new Category();
-                category.setCategoryId(resultSet.getInt("category_id"));
-                category.setName(resultSet.getString("name"));
-                category.setDescription(resultSet.getString("description"));
-                categories.add(category);
-
+                categories.add(mapRow(resultSet)); //List of categories from SELECT...
             }
 
         } catch (SQLException e) {
@@ -51,11 +45,7 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
             statement.setInt(1, categoryId);
             try(ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
-                    Category category = new Category();
-                    category.setCategoryId(resultSet.getInt("category_id"));
-                    category.setName(resultSet.getString("name"));
-                    category.setDescription(resultSet.getString("description"));
-                    return category;
+                   return mapRow(resultSet);
                 }
 
             }
@@ -125,5 +115,19 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
             e.printStackTrace();
             throw new RuntimeException("Error deleting category", e);
         }
+    }
+
+    // mapRow for mapping or ResultSet to Category Object
+    protected static Category mapRow(ResultSet row) throws SQLException {
+        int categoryId = row.getInt("category_id"); //getting data from ResultSet (data retrieved from db query
+        String name = row.getString("name");
+        String description = row.getString("description");
+
+        Category category = new Category();  //creating category object
+        category.setCategoryId(categoryId);
+        category.setName(name);
+        category.setDescription(description);
+
+        return category;
     }
 }
