@@ -75,8 +75,7 @@ public class CategoriesController {
     // the url to return all products in category 1 would look like this ✔
     // https://localhost:8080/categories/1/products
     @GetMapping("/{categoryId}/products")
-    public ResponseEntity<List<Product>> getProductsByCategoryId(@PathVariable int categoryId)
-    {
+    public ResponseEntity<List<Product>> getProductsByCategoryId(@PathVariable int categoryId) {
         // get a list of product by categoryId
         List<Product> products = productDao.listByCategoryId(categoryId);
         if (products.isEmpty()) {
@@ -84,9 +83,6 @@ public class CategoriesController {
         }
         return ResponseEntity.ok(products); //200 OK and list
     }
-
-    // add annotation to call this method for a POST action
-    // add annotation to ensure that only an ADMIN can call this function ✔
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')") //Only an admin can create categories
     public ResponseEntity<Category> addCategory(@RequestBody Category category)
@@ -95,9 +91,6 @@ public class CategoriesController {
         Category savedCategory = categoryDao.create(category);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedCategory); //Returns 201 if created :D
     }
-
-    // add annotation to call this method for a PUT (update) action - the url path must include the categoryId ✔
-    // add annotation to ensure that only an ADMIN can call this function ✔
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')") //Only an admin can update a category
     public ResponseEntity<Category> updateCategory(@PathVariable int id, @RequestBody Category category) {
@@ -114,13 +107,10 @@ public class CategoriesController {
         //Return updated category with status 200 (OK)
         return ResponseEntity.ok(updatedCategory);
     }
-
-    // add annotation to call this method for a DELETE action - the url path must include the categoryId
-    // add annotation to ensure that only an ADMIN can call this function
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')") //Only admin can DELETE
     public ResponseEntity<Void> deleteCategory(@PathVariable int id) {
-       //Verify category exisits:
+       //Verify category exists:
         Category existingCategory = categoryDao.getById(id);
 
         if (existingCategory == null) {
