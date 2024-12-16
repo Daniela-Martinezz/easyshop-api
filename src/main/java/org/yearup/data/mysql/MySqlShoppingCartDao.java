@@ -102,11 +102,27 @@ public class MySqlShoppingCartDao implements ShoppingCartDao {
 
     @Override
     public void removeItem(int userId, int productId) {
-
+        String query = "DELETE FROM shopping_cart WHERE user_id = ? AND product_id = ?";
+        try(Connection connection = DriverManager.getConnection(connectionString);
+        PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, userId);
+            statement.setInt(2, productId);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void clearCart(int userId) {
+        String query = "DELETE FROM shopping_cart WHERE user_id = ?";
+        try (Connection connection = DriverManager.getConnection(connectionString);
+        PreparedStatement statement = connection.prepareStatement(query)){
+            statement.setInt(1, userId);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
 }
