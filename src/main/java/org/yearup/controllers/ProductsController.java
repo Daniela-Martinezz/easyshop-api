@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
-@RequestMapping("products")
+@RequestMapping("/{products}")
 @CrossOrigin
 public class ProductsController
 {
@@ -91,8 +91,7 @@ public class ProductsController
 
     @DeleteMapping("{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public void deleteProduct(@PathVariable int id)
-    {
+    public void deleteProduct(@PathVariable int id) {
         try
         {
             var product = productDao.getById(id);

@@ -12,8 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class MySqlUserDao extends MySqlDaoBase implements UserDao
-{
+public class MySqlUserDao extends MySqlDaoBase implements UserDao {
     @Autowired
     public MySqlUserDao(DataSource dataSource)
     {
@@ -22,8 +21,7 @@ public class MySqlUserDao extends MySqlDaoBase implements UserDao
 
 
     @Override
-    public User create(User newUser)
-    {
+    public User create(User newUser) {
         String sql = "INSERT INTO users (username, hashed_password, role) VALUES (?, ?, ?)";
         String hashedPassword = new BCryptPasswordEncoder().encode(newUser.getPassword());
 
@@ -49,8 +47,7 @@ public class MySqlUserDao extends MySqlDaoBase implements UserDao
     }
 
     @Override
-    public List<User> getAll()
-    {
+    public List<User> getAll() {
         List<User> users = new ArrayList<>();
 
         String sql = "SELECT * FROM users";
@@ -75,8 +72,7 @@ public class MySqlUserDao extends MySqlDaoBase implements UserDao
     }
 
     @Override
-    public User getUserById(int id)
-    {
+    public User getUserById(int id) {
         String sql = "SELECT * FROM users WHERE user_id = ?";
         try (Connection connection = getConnection())
         {
@@ -99,8 +95,7 @@ public class MySqlUserDao extends MySqlDaoBase implements UserDao
     }
 
     @Override
-    public User getByUserName(String username)
-    {
+    public User getByUserName(String username) {
         String sql = "SELECT * " +
                 " FROM users " +
                 " WHERE username = ?";
@@ -127,8 +122,7 @@ public class MySqlUserDao extends MySqlDaoBase implements UserDao
     }
 
     @Override
-    public int getIdByUsername(String username)
-    {
+    public int getIdByUsername(String username) {
         User user = getByUserName(username);
 
         if(user != null)
