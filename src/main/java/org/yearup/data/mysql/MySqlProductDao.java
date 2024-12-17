@@ -3,7 +3,6 @@ package org.yearup.data.mysql;
 import org.springframework.stereotype.Component;
 import org.yearup.models.Product;
 import org.yearup.data.ProductDao;
-
 import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.*;
@@ -13,8 +12,7 @@ import java.util.List;
 @Component
 public class MySqlProductDao extends MySqlDaoBase implements ProductDao
 {
-    public MySqlProductDao(DataSource dataSource)
-    {
+    public MySqlProductDao(DataSource dataSource) {
         super(dataSource);
     }
 
@@ -23,7 +21,7 @@ public class MySqlProductDao extends MySqlDaoBase implements ProductDao
     {
         List<Product> products = new ArrayList<>();
 
-        //Updated: Default if null
+        //Updated: Default if null, Added Max
         categoryId = (categoryId == null || categoryId == -1) ? -1 : categoryId;
         minPrice = (minPrice == null) ? new BigDecimal("0") : minPrice; // Default to 0 if minPrice is null
         maxPrice = (maxPrice == null) ? new BigDecimal("99999999") : maxPrice; // Default to a high value for maxPrice

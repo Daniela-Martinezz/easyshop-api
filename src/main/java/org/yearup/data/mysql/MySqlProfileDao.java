@@ -10,8 +10,7 @@ import java.sql.*;
 @Component
 public class MySqlProfileDao extends MySqlDaoBase implements ProfileDao
 {
-    public MySqlProfileDao(DataSource dataSource)
-    {
+    public MySqlProfileDao(DataSource dataSource) {
         super(dataSource);
     }
 
