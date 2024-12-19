@@ -2,6 +2,7 @@ package org.yearup.data.mysql;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.yearup.data.ShoppingCartDao;
 import org.yearup.models.Product;
 import org.yearup.models.ShoppingCart;
@@ -46,10 +47,7 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
                 int quantity = rs.getInt("quantity");
 
                 // Create Product object
-                Product product = new Product();
-                product.setProductId(productId);
-                product.setName(productName);
-                product.setPrice(productPrice);
+               Product product = new Product(productId, productName, productPrice);
 
                 // Create ShoppingCartItem object
                 ShoppingCartItem item = new ShoppingCartItem();
@@ -68,6 +66,7 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
     }
 
     @Override
+    @Transactional
     public void saveOrUpdate(ShoppingCart shoppingCart) {
         String deleteQuery = "DELETE FROM shopping_cart WHERE user_id = ?";
         String insertQuery = """

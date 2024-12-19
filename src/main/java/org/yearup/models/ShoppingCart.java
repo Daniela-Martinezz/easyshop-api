@@ -6,8 +6,6 @@ import java.util.Map;
 
 public class ShoppingCart {
 
-
-
     private int userId; //userId added
     private Map<Integer, ShoppingCartItem> items = new HashMap<>();
 
@@ -28,8 +26,13 @@ public class ShoppingCart {
     }
 
     public void add(ShoppingCartItem item) {
-        items.put(item.getProductId(), item);
-    }
+        if (items.containsKey(item.getQuantity())) {
+            ShoppingCartItem existingItem = items.get(item.getProductId());
+            existingItem.setQuantity(existingItem.getQuantity() + item.getQuantity());
+        } else {
+            items.put(item.getProductId(), item);
+        }
+    } //add to cart method
 
     public ShoppingCartItem get(int productId) {
         return items.get(productId);
@@ -38,7 +41,7 @@ public class ShoppingCart {
     public BigDecimal getTotal() {
         BigDecimal total = items.values()
                 .stream()
-                .map(i -> i.getLineTotal())
+                .map(ShoppingCartItem::getLineTotal)
                 .reduce( BigDecimal.ZERO, (lineTotal, subTotal) -> subTotal.add(lineTotal));
 
         return total;
