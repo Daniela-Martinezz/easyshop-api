@@ -14,6 +14,7 @@ import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 
+//annotations v important
 @Component
 public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDao {
 
