@@ -15,12 +15,7 @@ public class Product
     private String imageUrl;
 
     public Product() {
-    }
 
-    public Product(int productId, String name, BigDecimal price) {
-        this.productId = productId;
-        this.name = name;
-        this.price = price;
     }
 
     public Product(int productId, String name, BigDecimal price, int categoryId, String description, String color, int stock, boolean isFeatured, String imageUrl)

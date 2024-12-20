@@ -19,6 +19,7 @@ import java.security.Principal;
 @RestController
 @RequestMapping("/cart")
 @CrossOrigin
+@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
 
 public class ShoppingCartController {
     // a shopping cart requires
@@ -60,7 +61,7 @@ public class ShoppingCartController {
     // add a POST method to add a product to the cart - the url should be
     // https://localhost:8080/cart/products/15 (15 is the productId to be added
     @PostMapping("/products/{productId}")
-    public ResponseEntity<Void> addProductToCart(@PathVariable int productId, @RequestBody ShoppingCartItem item, Principal principal) {
+    public ResponseEntity<Void> addProductToCart(@PathVariable int productId, ShoppingCartItem item, Principal principal) {
         User user = getAuthenticatedUser(principal);
         ShoppingCart cart = shoppingCartDao.getByUserId(user.getId());
         try {

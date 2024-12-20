@@ -3,6 +3,7 @@ package org.yearup.data.mysql;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.yearup.data.ProductDao;
 import org.yearup.data.ShoppingCartDao;
 import org.yearup.models.Product;
 import org.yearup.models.ShoppingCart;
@@ -16,9 +17,11 @@ import java.util.Map;
 @Component
 public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDao {
 
+    private final ProductDao productDao;
     @Autowired
-    public MySqlShoppingCartDao(DataSource dataSource) {
+    public MySqlShoppingCartDao(DataSource dataSource, ProductDao productDao) {
         super(dataSource);  // Calls the constructor of MySqlDaoBase with DataSource
+        this.productDao = productDao;
     }
 
     @Override
@@ -47,7 +50,7 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
                 int quantity = rs.getInt("quantity");
 
                 // Create Product object
-               Product product = new Product(productId, productName, productPrice);
+               Product product = productDao.getById(productId);
 
                 // Create ShoppingCartItem object
                 ShoppingCartItem item = new ShoppingCartItem();
